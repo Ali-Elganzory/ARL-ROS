@@ -1,0 +1,4 @@
+<launch>
+  <node name="Driver" pkg="exercise_three" type="user_info_driver.py" output="screen"/>
+  <node name="Processor" pkg="exercise_three" type="data_processing.py" output="screen"/>
+</launch>

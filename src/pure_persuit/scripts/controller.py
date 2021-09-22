@@ -19,41 +19,39 @@ publisher = rospy.Publisher("Reading", State, queue_size=10)
 
 old_nearest_point_index = None
 
-def search_target_index(self, state):
-    global old_nearest_point_index
+def search_target_index():
+    global state, old_nearest_point_index
+
+    ld = Kdd * velocity
+
     # To speed up nearest point search, doing it at only first time.
-    if self.old_nearest_point_index is None:
+    if old_nearest_point_index is None:
         # search nearest point index
         d = np.hypot(*zip(*path))
         ind = np.argmin(d)
-        self.old_nearest_point_index = ind
+        old_nearest_point_index = ind
     else:
-        ind = self.old_nearest_point_index
-        distance_this_index = state.calc_distance(self.cx[ind],
-                                                    self.cy[ind])
+        ind = old_nearest_point_index
+        distance_this_index = state.calc_distance(*path[ind])
         while True:
-            distance_next_index = state.calc_distance(self.cx[ind + 1],
-                                                        self.cy[ind + 1])
+            distance_next_index = state.calc_distance(*path[ind + 1])
             if distance_this_index < distance_next_index:
                 break
-            ind = ind + 1 if (ind + 1) < len(self.cx) else ind
+            ind = ind + 1 if (ind + 1) < len(path) else ind
             distance_this_index = distance_next_index
-        self.old_nearest_point_index = ind
-
-    Lf = k * state.v + Lfc  # update look ahead distance
+        old_nearest_point_index = ind
 
     # search look ahead target point index
-    while Lf > state.calc_distance(self.cx[ind], self.cy[ind]):
-        if (ind + 1) >= len(self.cx):
+    while ld > state.calc_distance(*path[ind]):
+        if (ind + 1) >= len(path):
             break  # not exceed goal
         ind += 1
 
-    return ind, Lf
+    return ind, ld
 
 
 def control(state: State):
     global publisher
-    ld = Kdd * velocity
     path[]
 
     publisher.publish(reading)
